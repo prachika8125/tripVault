@@ -2,12 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
-
+const authRoutes = require('./routes/auth'); // Import auth routes
 const app = express();
 
 // Middleware to parse JSON and handle cross-origin requests
 app.use(express.json());
 app.use(cors());
+
+// Mount the route: any request sent to /api/auth/* goes to routes/auth.js
+app.use('/api/auth', authRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
