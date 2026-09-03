@@ -11,9 +11,6 @@ Will add later
 |---|---|
 | Database | MongoDB |
 | Frontend| React|
-| Frontend| React|
-| Frontend| React|
-| Frontend| React|
 | Version Control | Git + GitHub |
 
 ### Folder Structure 
@@ -21,7 +18,6 @@ Will add later
 Note: Needs updating
 
 tripVault/
-├── CMakeLists.txt
 ├── README.md
 ├── .gitignore
 ├── client/                  
