@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 // Endpoint: POST /api/auth/register
@@ -37,4 +38,41 @@ router.post('/register', async (req, res) => {
   }
 });
 
+
+// Post /api/auth/login
+router.post('/login', async (req, res) => {
+  try {
+    //Extract email and password from the request body
+    const { email, password } = req.body;
+    // 1. Check if a user with this email exists in MongoDB
+    const user= await User.findOne({ email });
+    //If user does not exist, return a 400 status with an error message
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+  //Compare the provided password with the hashed password stored in the database
+  const isMatch = await bcrypt.compare(password, user.password);
+  //If the passwords do not match, return a 400 status with an error message
+  if (!isMatch) {
+    return res.status(400).json({ message: 'Invalid credentials' });
+  }
+  //If the passwords match, generate a JWT token
+  const token = jwt.sign({ userId: user._id }, //payload: userId, which can be used to identify the user from MongoDB
+     process.env.JWT_SECRET, //the secret key to sign the token
+      { expiresIn: '1h' }); //The token will expire in 1 hour
+
+
+  //Return the token and user information to the client on successful login
+  res.json({
+      token: token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    });
+} catch (err) {
+  res.status(500).json({ message: 'Server error', error: err.message });
+}
+});
 module.exports = router;
