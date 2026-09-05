@@ -75,4 +75,22 @@ router.post('/login', async (req, res) => {
   res.status(500).json({ message: 'Server error', error: err.message });
 }
 });
+
+// GET /api/auth/me (Protected Route)
+// Notice how authMiddleware is passed as the second argument
+router.get('/me', authMiddleware, async (req, res) => {
+  try {
+    // Search the database using the ID injected by the middleware
+    const user = await User.findById(req.userId).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
 module.exports = router;
