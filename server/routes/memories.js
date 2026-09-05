@@ -50,12 +50,12 @@ router.put('/:id', authMiddleware, async (req, res) => {
       return res.status(401).json({ message: 'Not authorized to edit this memory' });
     }
 
-    // 3. Update the document and return the new version ({ new: true })
-    memory = await Memory.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { new: true }
-    );
+    // 3. Update the document and return the new version
+memory = await Memory.findByIdAndUpdate(
+  req.params.id,
+  { $set: req.body },
+  { returnDocument: 'after' } 
+);
 
     res.json(memory);
   } catch (err) {
