@@ -13,7 +13,6 @@ Trip Vault is a a travel memory journal where users can log trips, upload photos
 
 ### Setup and Build Instructions
 1. Clone the repository
-First, clone the repository in your local machine
 ```bash
 git clone https://github.com/prachika8125/tripVault.git
 cd tripVault
