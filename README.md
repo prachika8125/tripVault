@@ -31,15 +31,14 @@ MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret_key_here
 ```
 
-3. Frontend configuration
-Open a new terminal, navigate to the ``/client`` directory, install the dependencies
+Open a new terminal, navigate to the ``/client`` directory, install the frontend dependencies
 ```bash
 cd client 
 npm install 
 npm install vite@5.4.11 @vitejs/plugin-react@4.3.4 axios react-router-dom
 ```
 
-4. Run the application
+3. Run the application
 
 ```bash
 # Backend
