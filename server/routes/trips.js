@@ -35,6 +35,25 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 });
 
+// GET /api/trips/:id - Get a single trip by ID (owner only)
+router.get('/:id', authMiddleware, async (req, res) => {
+  try {
+    const trip = await Trip.findById(req.params.id);
+
+    if (!trip) {
+      return res.status(404).json({ message: 'Trip not found' });
+    }
+
+    if (trip.user.toString() !== req.userId) {
+      return res.status(401).json({ message: 'Not authorized to view this trip' });
+    }
+
+    res.json(trip);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch trip', error: err.message });
+  }
+});
+
 // PUT /api/trips/:id - Update a specific trip
 router.put('/:id', authMiddleware, async (req, res) => {
   try {
