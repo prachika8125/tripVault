@@ -1,32 +1,41 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '../api/axios';
+import { useState, useEffect } from 'react';
+import { getTrips } from '../services/tripService';
 
 function Dashboard() {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  const [trips, setTrips] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    api.get('/auth/me', { headers: { Authorization: `Bearer ${token}` } })
-      .then((res) => setUser(res.data))
-      .catch(() => {
-        localStorage.removeItem('token');
-        navigate('/login');
-      });
-  }, [navigate]);
+    const fetchTrips = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const data = await getTrips();
+        setTrips(data);
+      } catch (err) {
+        setError('Failed to load your trips. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
-  };
+    fetchTrips();
+  }, []);
 
-  if (!user) return <p>Loading...</p>;
+  if (loading) {
+    return <p style={{ color: 'red' }}>Loading your trips...</p>;
+  }
+
+  if (error) {
+    return <p style={{ color: 'red' }}>{error}</p>;
+  }
 
   return (
     <div>
-      <h2>Welcome, {user.name}!</h2>
-      <button onClick={handleLogout}>Logout</button>
+      <h1>My Trips</h1>
+      {/* Trip cards + empty state come in Chunk 4 */}
+      <pre>{JSON.stringify(trips, null, 2)}</pre>
     </div>
   );
 }
