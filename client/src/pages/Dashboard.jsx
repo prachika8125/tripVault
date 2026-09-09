@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getTrips } from '../services/tripService';
+import TripCard from '../components/tripCard';
 
 function Dashboard() {
   const [trips, setTrips] = useState([]);
@@ -33,9 +34,18 @@ function Dashboard() {
 
   return (
     <div>
-      <h1>My Trips</h1>
-      {/* Trip cards + empty state come in Chunk 4 */}
-      <pre>{JSON.stringify(trips, null, 2)}</pre>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1 style={{ color: 'white' }}>My Trips</h1>
+        <button onClick={() => alert('Create form coming in Day 4!')}>
+          + Create Trip
+        </button>
+      </div>
+
+      {trips.length === 0 ? (
+        <p>No trips yet — start logging your travel memories!</p>
+      ) : (
+        trips.map((trip) => <TripCard key={trip._id} trip={trip} />)
+      )}
     </div>
   );
 }
