@@ -15,6 +15,7 @@ function TripCard({ trip }) {
       <p><strong>Destination:</strong> {trip.destination}</p>
       <p><strong>Dates:</strong> {formatDate(trip.startDate)} – {formatDate(trip.endDate)}</p>
       <p><strong>Rating:</strong> {trip.rating ? `${trip.rating} / 5` : 'Not rated'}</p>
+      <button onClick={onEdit}>Edit</button>
     </div>
   );
 }

@@ -1,16 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-function CreateTripForm({ onSubmit, onCancel }) {
-  const [formData, setFormData] = useState({
-    title: '',
-    destination: '',
-    startDate: '',
-    endDate: '',
-    description: '',
-    rating: ''
-  });
+const emptyTrip = {
+  title: '',
+  destination: '',
+  startDate: '',
+  endDate: '',
+  description: '',
+  rating: ''
+};
+
+function TripForm({ initialData, onSubmit, onCancel }) {
+  const [formData, setFormData] = useState(emptyTrip);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        title: initialData.title || '',
+        destination: initialData.destination || '',
+        startDate: initialData.startDate ? initialData.startDate.slice(0, 10) : '',
+        endDate: initialData.endDate ? initialData.endDate.slice(0, 10) : '',
+        description: initialData.description || '',
+        rating: initialData.rating || ''
+      });
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,7 +53,7 @@ function CreateTripForm({ onSubmit, onCancel }) {
 
   return (
     <form onSubmit={handleSubmit} style={{ border: '1px solid #ccc', padding: '16px', marginBottom: '16px' }}>
-      <h3>New Trip</h3>
+      <h3>{initialData ? 'Edit Trip' : 'New Trip'}</h3>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -82,4 +97,4 @@ function CreateTripForm({ onSubmit, onCancel }) {
   );
 }
 
-export default CreateTripForm;
+export default TripForm;
