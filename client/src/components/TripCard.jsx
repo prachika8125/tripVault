@@ -1,4 +1,4 @@
-function TripCard({ trip }) {
+function TripCard({ trip,onEdit }) {
   const formatDate = (dateString) => {
     if (!dateString) return 'Not set';
     return new Date(dateString).toLocaleDateString();

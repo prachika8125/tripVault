@@ -69,7 +69,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
     trip = await Trip.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     );
 
     res.json(trip);
