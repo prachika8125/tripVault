@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getTrips, createTrip, getTripById, updateTrip } from '../services/tripService';
-import TripCard from '../components/TripCard';
+import { getTrips, createTrip, getTripById, updateTrip, deleteTrip } from '../services/tripService';
+import TripCard from '../components/tripCard';
 import TripForm from '../components/tripForm';
 
 function Dashboard() {
@@ -44,6 +44,15 @@ function Dashboard() {
     await fetchTrips();
   };
 
+  const handleDeleteTrip = async (tripId) => {
+    try {
+      await deleteTrip(tripId);
+      await fetchTrips();
+    } catch (err) {
+      setError('Failed to delete trip. Please try again.');
+    }
+  };
+
   if (loading) {
     return <p>Loading your trips...</p>;
   }
@@ -62,10 +71,7 @@ function Dashboard() {
       </div>
 
       {showCreateForm && (
-        <TripForm
-          onSubmit={handleCreateTrip}
-          onCancel={() => setShowCreateForm(false)}
-        />
+        <TripForm onSubmit={handleCreateTrip} onCancel={() => setShowCreateForm(false)} />
       )}
 
       {editingTrip && (
@@ -80,7 +86,12 @@ function Dashboard() {
         <p>No trips yet — start logging your travel memories!</p>
       ) : (
         trips.map((trip) => (
-          <TripCard key={trip._id} trip={trip} onEdit={() => handleEditClick(trip._id)} />
+          <TripCard
+            key={trip._id}
+            trip={trip}
+            onEdit={() => handleEditClick(trip._id)}
+            onDelete={() => handleDeleteTrip(trip._id)}
+          />
         ))
       )}
     </div>
