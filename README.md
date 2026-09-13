@@ -1,5 +1,12 @@
 # TRIP VAULT
-Trip Vault is a a travel memory journal where users can log trips, upload photos, and share memories.
+Trip Vault is a a travel memory journal where users can log trips, upload photos, and share memories. Logged-in users can create, view, edit, and delete their own trips. All trip data is scoped to the authenticated user — no user can view or modify another user's trips.
+
+### Features
+- View all your trips as cards (title, destination, dates, rating)
+- Create a new trip via a form
+- Edit an existing trip (pre-filled form)
+- Delete a trip with a confirmation prompt
+- Friendly empty state when you have no trips yet
 
 ## Tech Stack
 
@@ -49,3 +56,33 @@ node index.js
 cd client
 npm run dev
 ```
+
+## Data Models
+
+### Trip
+| Field       | Type     | Required | Notes                          |
+|-------------|----------|----------|----------------------------------|
+| title       | String   | Yes      |                                  |
+| destination | String   | Yes      |                                  |
+| startDate   | Date     | No       |                                  |
+| endDate     | Date     | No       |                                  |
+| description | String   | No       |                                  |
+| rating      | Number   | No       | 1–5                              |
+| user        | ObjectId | Yes      | References the User who owns it |
+
+
+
+## API Routes
+
+All routes below require `Authorization: Bearer <token>`.
+
+| Method | Route            | Description                              |
+|--------|------------------|--------------------------------------------|
+| POST   | /api/trips       | Create a new trip                        |
+| GET    | /api/trips       | Get all trips for the logged-in user     |
+| GET    | /api/trips/:id   | Get a single trip by ID (owner only)     |
+| PUT    | /api/trips/:id   | Update a trip (owner only)               |
+| DELETE | /api/trips/:id   | Delete a trip (owner only)               |
+|
+
+
