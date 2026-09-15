@@ -2,6 +2,36 @@ const express = require('express');
 const router = express.Router();
 const Trip = require('../models/Trip');
 const authMiddleware = require('../middleware/authMiddleware');
+const { upload, uploadToCloudinary } = require('../middleware/upload');
+
+// POST /api/trips/:id/upload - Upload a photo and attach it to a trip
+router.post('/:id/upload', authMiddleware, upload.single('image'), async (req, res) => {
+  try {
+    const trip = await Trip.findById(req.params.id);
+
+    if (!trip) {
+      return res.status(404).json({ message: 'Trip not found' });
+    }
+
+    if (trip.user.toString() !== req.userId) {
+      return res.status(401).json({ message: 'Not authorized to modify this trip' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'No image file provided' });
+    }
+
+    const result = await uploadToCloudinary(req.file.buffer);
+
+    trip.coverImage = result.secure_url;
+    trip.photos.push(result.secure_url);
+    await trip.save();
+
+    res.json(trip);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to upload photo', error: err.message });
+  }
+});
 
 // POST /api/trips - Create a new trip
 router.post('/', authMiddleware, async (req, res) => {

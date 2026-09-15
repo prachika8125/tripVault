@@ -4,7 +4,7 @@ const tripSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'User' // Links this trip to the user who created it
+    ref: 'User'
   },
   title: {
     type: String,
@@ -29,9 +29,17 @@ const tripSchema = new mongoose.Schema({
     type: Number,
     min: 1,
     max: 5
+  },
+  coverImage: {
+    type: String,
+    default: ''
+  },
+  photos: {
+    type: [String],
+    default: []
   }
 }, {
-  timestamps: true // Automatically adds createdAt and updatedAt
+  timestamps: true
 });
 
 module.exports = mongoose.model('Trip', tripSchema);
