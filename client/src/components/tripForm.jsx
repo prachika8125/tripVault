@@ -13,6 +13,8 @@ function TripForm({ initialData, onSubmit, onCancel }) {
   const [formData, setFormData] = useState(emptyTrip);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
 
   useEffect(() => {
     if (initialData) {
@@ -24,12 +26,22 @@ function TripForm({ initialData, onSubmit, onCancel }) {
         description: initialData.description || '',
         rating: initialData.rating || ''
       });
+      // Show the existing cover image as the starting preview, if there is one
+      setPreviewUrl(initialData.coverImage || '');
     }
   }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
   };
 
   const handleSubmit = async (e) => {
@@ -43,7 +55,7 @@ function TripForm({ initialData, onSubmit, onCancel }) {
 
     setSubmitting(true);
     try {
-      await onSubmit(formData);
+      await onSubmit(formData, selectedFile);
     } catch (err) {
       setError('Failed to save trip. Please try again.');
     } finally {
@@ -85,6 +97,16 @@ function TripForm({ initialData, onSubmit, onCancel }) {
       <div>
         <label>Rating (1–5)</label><br />
         <input type="number" name="rating" min="1" max="5" value={formData.rating} onChange={handleChange} />
+      </div>
+
+      <div>
+        <label>Cover Photo</label><br />
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+        {previewUrl && (
+          <div style={{ marginTop: '8px' }}>
+            <img src={previewUrl} alt="Preview" style={{ maxWidth: '200px', maxHeight: '200px', display: 'block' }} />
+          </div>
+        )}
       </div>
 
       <button type="submit" disabled={submitting}>

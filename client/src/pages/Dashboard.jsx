@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getTrips, createTrip, getTripById, updateTrip, deleteTrip } from '../services/tripService';
-import TripCard from '../components/tripCard';
+import { getTrips, createTrip, getTripById, updateTrip, deleteTrip, uploadTripPhoto } from '../services/tripService';
+import TripCard from '../components/TripCard';
 import TripForm from '../components/tripForm';
 
 function Dashboard() {
@@ -27,8 +27,11 @@ function Dashboard() {
     fetchTrips();
   }, []);
 
-  const handleCreateTrip = async (formData) => {
-    await createTrip(formData);
+  const handleCreateTrip = async (formData, file) => {
+    const newTrip = await createTrip(formData);
+    if (file) {
+      await uploadTripPhoto(newTrip._id, file);
+    }
     setShowCreateForm(false);
     await fetchTrips();
   };
@@ -38,8 +41,11 @@ function Dashboard() {
     setEditingTrip(trip);
   };
 
-  const handleUpdateTrip = async (formData) => {
+  const handleUpdateTrip = async (formData, file) => {
     await updateTrip(editingTrip._id, formData);
+    if (file) {
+      await uploadTripPhoto(editingTrip._id, file);
+    }
     setEditingTrip(null);
     await fetchTrips();
   };
