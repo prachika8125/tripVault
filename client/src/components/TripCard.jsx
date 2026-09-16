@@ -4,13 +4,6 @@ function TripCard({ trip, onEdit, onDelete }) {
     return new Date(dateString).toLocaleDateString();
   };
 
-  const handleDeleteClick = () => {
-    const confirmed = window.confirm(`Delete "${trip.title}"? This cannot be undone.`);
-    if (confirmed) {
-      onDelete();
-    }
-  };
-
   return (
     <div style={{
       border: '1px solid #ccc',
@@ -18,12 +11,19 @@ function TripCard({ trip, onEdit, onDelete }) {
       padding: '16px',
       marginBottom: '12px'
     }}>
+      {trip.coverImage && (
+        <img
+          src={trip.coverImage}
+          alt={trip.title}
+          style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '4px', marginBottom: '8px' }}
+        />
+      )}
       <h3>{trip.title}</h3>
       <p><strong>Destination:</strong> {trip.destination}</p>
       <p><strong>Dates:</strong> {formatDate(trip.startDate)} – {formatDate(trip.endDate)}</p>
       <p><strong>Rating:</strong> {trip.rating ? `${trip.rating} / 5` : 'Not rated'}</p>
       <button onClick={onEdit}>Edit</button>
-       <button onClick={handleDeleteClick} style={{ color: 'red', marginLeft: '8px' }}>Delete</button>
+      <button onClick={onDelete} style={{ color: 'red', marginLeft: '8px' }}>Delete</button>
     </div>
   );
 }
