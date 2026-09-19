@@ -2,25 +2,22 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
-const authRoutes = require('./routes/auth'); // Import auth routes
-const tripRoutes = require('./routes/trips'); // Import trip routes
+const authRoutes = require('./routes/auth');
+const tripRoutes = require('./routes/trips');
+const userRoutes = require('./routes/users');
 const app = express();
 
-// Middleware to parse JSON and handle cross-origin requests
 app.use(express.json());
 app.use(cors());
 
-// Mount the route: any request sent to /api/auth/* goes to routes/auth.js
 app.use('/api/auth', authRoutes);
-// Mount the route: any request sent to /api/trips/* goes to routes/trips.js
 app.use('/api/trips', tripRoutes);
+app.use('/api/users', userRoutes);
 
-// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected successfully'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
-// Basic test route
 app.get('/', (req, res) => {
   res.send('TripVault API is running');
 });
