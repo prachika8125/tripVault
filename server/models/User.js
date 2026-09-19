@@ -1,21 +1,20 @@
 const mongoose = require('mongoose');
 
-// 1. Define the Schema (Structure)
 const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true // Request will fail if 'name' is missing
-  },
-  email: {
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  username: {
     type: String,
     required: true,
-    unique: true // Prevents two users from registering with the same email
+    unique: true,
+    trim: true,
+    lowercase: true
   },
-  password: {
+  bio: {
     type: String,
-    required: true
+    default: ''
   }
-}, { timestamps: true }); // Automatically adds 'createdAt' and 'updatedAt' fields
+}, { timestamps: true });
 
-// 2. Export the Model
 module.exports = mongoose.model('User', userSchema);

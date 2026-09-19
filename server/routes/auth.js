@@ -8,13 +8,19 @@ const authMiddleware = require('../middleware/authMiddleware');
 // Endpoint: POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
-    // Extract name, email, and password from the incoming request body
-    const { name, email, password } = req.body;
+    // Extract name, email, password, and username from the incoming request body
+    const { name, email, password, username } = req.body;
 
     // 1. Check if a user with this email already exists in MongoDB
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
+    }
+
+    // 1b. Check if this username is already taken
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      return res.status(400).json({ message: 'Username already taken' });
     }
 
     // 2. Generate a "salt" (random security string) and hash the password
@@ -25,7 +31,8 @@ router.post('/register', async (req, res) => {
     const newUser = new User({
       name,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      username
     });
 
     // 4. Save the user document into MongoDB
@@ -34,7 +41,6 @@ router.post('/register', async (req, res) => {
     // 5. Respond with HTTP Status 201 (Created) and a success message
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
-    // If an error occurs, send back HTTP Status 500 (Internal Server Error)
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
