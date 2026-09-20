@@ -52,10 +52,10 @@ router.put('/profile', authMiddleware, async (req, res) => {
     }
 
     const updatedUser = await User.findByIdAndUpdate(
-      req.userId,
-      { $set: updateFields },
-      { new: true, runValidators: true }
-    ).select('name username bio email');
+  req.userId,
+  { $set: updateFields },
+  { returnDocument: 'after', runValidators: true }
+).select('name username bio email');
 
     res.json(updatedUser);
   } catch (err) {
