@@ -7,6 +7,9 @@ Trip Vault is a a travel memory journal where users can log trips, upload photos
 - Edit an existing trip (pre-filled form)
 - Delete a trip with a confirmation prompt
 - Friendly empty state when you have no trips yet
+-   Photo upload on trips
+-   Photo gallery on the trip detail page
+-   Public profile page
 
 ## Tech Stack
 
@@ -20,6 +23,7 @@ Trip Vault is a a travel memory journal where users can log trips, upload photos
 
 ### Setup and Build Instructions
 1. Clone the repository
+First, clone the repository in your local machine
 ```bash
 git clone https://github.com/prachika8125/tripVault.git
 cd tripVault
@@ -38,14 +42,15 @@ MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret_key_here
 ```
 
-Open a new terminal, navigate to the ``/client`` directory, install the frontend dependencies
+3. Frontend configuration
+Open a new terminal, navigate to the ``/client`` directory, install the dependencies
 ```bash
 cd client 
 npm install 
 npm install vite@5.4.11 @vitejs/plugin-react@4.3.4 axios react-router-dom
 ```
 
-3. Run the application
+4. Run the application
 
 ```bash
 # Backend
@@ -60,15 +65,15 @@ npm run dev
 ## Data Models
 
 ### Trip
-| Field       | Type     | Required | Notes                          |
-|-------------|----------|----------|----------------------------------|
-| title       | String   | Yes      |                                  |
-| destination | String   | Yes      |                                  |
-| startDate   | Date     | No       |                                  |
-| endDate     | Date     | No       |                                  |
-| description | String   | No       |                                  |
-| rating      | Number   | No       | 1–5                              |
-| user        | ObjectId | Yes      | References the User who owns it |
+| Field       | Type     | Required | 
+|-------------|----------|----------|
+| title       | String   | Yes      | 
+| destination | String   | Yes      | 
+| startDate   | Date     | No       |
+| endDate     | Date     | No       | 
+| description | String   | No       |  
+| rating      | Number (1-5)   | No       |
+| user        | ObjectId | Yes      |
 
 
 
@@ -82,7 +87,11 @@ All routes below require `Authorization: Bearer <token>`.
 | GET    | /api/trips       | Get all trips for the logged-in user     |
 | GET    | /api/trips/:id   | Get a single trip by ID (owner only)     |
 | PUT    | /api/trips/:id   | Update a trip (owner only)               |
-| DELETE | /api/trips/:id   | Delete a trip (owner only)               |
-|
+| DELETE | /api/trips/:id   | Delete a trip (owner only) 
+| POST| /api/trips/:id/upload   |   |
+| GET| /api/users/:username/profile | View profile page |
+| PUT| /api/users/profile  | View profile page (owner only) |
+  
 
+- Edit trip: pre-fill accuracy (including optional/missing fields), update persists correctly, form correctly re-syncs when switching between trips
 
