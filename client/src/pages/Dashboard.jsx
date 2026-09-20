@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getTrips, createTrip, getTripById, updateTrip, deleteTrip, uploadTripPhoto } from '../services/tripService';
+import { getCurrentUser, updateProfile } from '../services/userService';
 import TripCard from '../components/TripCard';
-import TripForm from '../components/tripForm';
+import TripForm from '../components/TripForm';
+import EditProfileForm from '../components/EditProfileForm';
 
 function Dashboard() {
   const [trips, setTrips] = useState([]);
@@ -9,6 +12,8 @@ function Dashboard() {
   const [error, setError] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingTrip, setEditingTrip] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [editingProfile, setEditingProfile] = useState(false);
 
   const fetchTrips = async () => {
     try {
@@ -23,8 +28,18 @@ function Dashboard() {
     }
   };
 
+  const fetchCurrentUser = async () => {
+    try {
+      const user = await getCurrentUser();
+      setCurrentUser(user);
+    } catch (err) {
+      // Non-critical for the trip list itself — profile link/edit just won't show correctly
+    }
+  };
+
   useEffect(() => {
     fetchTrips();
+    fetchCurrentUser();
   }, []);
 
   const handleCreateTrip = async (formData, file) => {
@@ -59,6 +74,12 @@ function Dashboard() {
     }
   };
 
+  const handleUpdateProfile = async (profileData) => {
+    const updated = await updateProfile(profileData);
+    setCurrentUser(updated);
+    setEditingProfile(false);
+  };
+
   if (loading) {
     return <p>Loading your trips...</p>;
   }
@@ -71,10 +92,30 @@ function Dashboard() {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1>My Trips</h1>
-        {!showCreateForm && !editingTrip && (
-          <button onClick={() => setShowCreateForm(true)}>+ Create Trip</button>
-        )}
+        <div>
+          {currentUser && (
+            <>
+              <Link to={`/profile/${currentUser.username}`} style={{ marginRight: '12px' }}>
+                My Profile
+              </Link>
+              <button onClick={() => setEditingProfile(true)} style={{ marginRight: '12px' }}>
+                Edit Profile
+              </button>
+            </>
+          )}
+          {!showCreateForm && !editingTrip && (
+            <button onClick={() => setShowCreateForm(true)}>+ Create Trip</button>
+          )}
+        </div>
       </div>
+
+      {editingProfile && currentUser && (
+        <EditProfileForm
+          initialData={currentUser}
+          onSubmit={handleUpdateProfile}
+          onCancel={() => setEditingProfile(false)}
+        />
+      )}
 
       {showCreateForm && (
         <TripForm onSubmit={handleCreateTrip} onCancel={() => setShowCreateForm(false)} />

@@ -3,6 +3,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import TripDetail from './pages/TripDetail';
+import PublicProfile from './pages/PublicProfile';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/profile/:username" element={<PublicProfile />} />
       </Routes>
     </BrowserRouter>
   );
