@@ -93,5 +93,3 @@ All routes below require `Authorization: Bearer <token>`.
 | PUT| /api/users/profile  | View profile page (owner only) |
   
 
-- Edit trip: pre-fill accuracy (including optional/missing fields), update persists correctly, form correctly re-syncs when switching between trips
-
