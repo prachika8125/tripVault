@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getTripById } from '../services/tripService';
 import PhotoGrid from '../components/PhotoGrid';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
 
 function TripDetail() {
   const { id } = useParams();
@@ -33,18 +35,12 @@ function TripDetail() {
   };
 
   if (loading) {
-    return <p>Loading trip...</p>;
-  }
+  return <LoadingSpinner message="Loading your trips..." />;
+}
 
-  if (error) {
-    return (
-      <div>
-        <p style={{ color: 'red' }}>{error}</p>
-        <button onClick={() => navigate('/dashboard')}>Back to Dashboard</button>
-      </div>
-    );
-  }
-
+if (error) {
+  return <ErrorMessage message={error} />;
+}
   return (
     <div>
       <Link to="/dashboard">← Back to Dashboard</Link>

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getPublicProfile } from '../services/userService';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
 
 function PublicProfile() {
   const { username } = useParams();
@@ -31,12 +33,12 @@ function PublicProfile() {
   };
 
   if (loading) {
-    return <p>Loading profile...</p>;
-  }
+  return <LoadingSpinner message="Loading your trips..." />;
+}
 
-  if (error) {
-    return <p style={{ color: 'red' }}>{error}</p>;
-  }
+if (error) {
+  return <ErrorMessage message={error} />;
+}
 
   return (
     <div>

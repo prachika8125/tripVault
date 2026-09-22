@@ -5,6 +5,8 @@ import { getCurrentUser, updateProfile } from '../services/userService';
 import TripCard from '../components/TripCard';
 import TripForm from '../components/TripForm';
 import EditProfileForm from '../components/EditProfileForm';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
 
 function Dashboard() {
   const [trips, setTrips] = useState([]);
@@ -81,12 +83,12 @@ function Dashboard() {
   };
 
   if (loading) {
-    return <p>Loading your trips...</p>;
-  }
+  return <LoadingSpinner message="Loading your trips..." />;
+}
 
-  if (error) {
-    return <p style={{ color: 'red' }}>{error}</p>;
-  }
+if (error) {
+  return <ErrorMessage message={error} />;
+}
 
   return (
     <div>
